@@ -12,7 +12,7 @@ This project was built and refactored with the assistance of the Gemini CLI. It 
 *   **Search**: Find tasks with a specific query in the title or description.
 *   **Filter**: Filter tasks by their status (done/not done) or priority (low/medium/high).
 *   **Export and import todos to/from a CSV file.**
-*   **Colorful Output**: Uses the `rich` library for a better user experience with colorful and well-formatted text.
+*   **Colorful Output**: Uses the `rich` library for a better user experience with colorful and well-formatted text. 
 *   **Configuration via `.env`**: The database file path is configured through a `.env` file for better security and flexibility.
 
 ## Requirements
@@ -85,16 +85,6 @@ python -m todo_cli_app.main toggle 1
 **Search for a todo:**
 ```bash
 python -m todo_cli_app.main search "My new task"
-```
-
-**Export todos to a CSV file:**
-```bash
-python -m todo_cli_app.main export my_tasks.csv
-```
-
-**Import todos from a CSV file:**
-```bash
-python -m todo_cli_app.main import my_tasks.csv
 ```
 
 For more commands and options, you can use the `--help` flag:
