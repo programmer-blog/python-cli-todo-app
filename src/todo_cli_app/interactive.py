@@ -158,6 +158,32 @@ def _interactive_search():
         status = "Done" if todo.completed else "Not Done"
         console.print(f"[{todo.id}] {todo.title} [{status}]")
 
+def _interactive_export():
+    console.print("\n[bold cyan]--- Export Todos to CSV ---[/bold cyan]")
+    filename = Prompt.ask("[yellow]Enter filename for export (e.g., todos.csv)[/yellow]")
+    if not filename:
+        console.print("[red]Filename cannot be empty. Aborting export.[/red]")
+        return
+    
+    count = todoer.export_to_csv(filename)
+    if count == 0:
+        console.print("[yellow]No tasks to export.[/yellow]")
+    else:
+        console.print(f"[green]Successfully exported {count} todo(s) to {filename}[/green]")
+
+def _interactive_import():
+    console.print("\n[bold cyan]--- Import Todos from CSV ---[/bold cyan]")
+    filename = Prompt.ask("[yellow]Enter filename for import (e.g., todos.csv)[/yellow]")
+    if not filename:
+        console.print("[red]Filename cannot be empty. Aborting import.[/red]")
+        return
+    
+    try:
+        count = todoer.import_from_csv(filename)
+        console.print(f"[green]Successfully imported {count} todo(s) from {filename}[/green]")
+    except FileNotFoundError:
+        console.print(f"[red]Error: File not found at '{filename}'[/red]")
+
 def interactive_mode():
     console.print("\n[bold green]Welcome to the Interactive Todo CLI![/bold green]")
     while True:
@@ -168,9 +194,11 @@ def interactive_mode():
         console.print("  4. [cyan]Update[/cyan] todo")
         console.print("  5. [cyan]Delete[/cyan] todo")
         console.print("  6. [cyan]Search[/cyan] todos")
-        console.print("  7. [red]Exit[/red]")
+        console.print("  7. [cyan]Export[/cyan] todos to CSV")
+        console.print("  8. [cyan]Import[/cyan] todos from CSV")
+        console.print("  9. [red]Exit[/red]")
 
-        choice = Prompt.ask("[blue]Choose an option[/blue]", choices=["1", "2", "3", "4", "5", "6", "7"])
+        choice = Prompt.ask("[blue]Choose an option[/blue]", choices=["1", "2", "3", "4", "5", "6", "7", "8", "9"])
 
         if choice == "1":
             _interactive_add()
@@ -185,6 +213,10 @@ def interactive_mode():
         elif choice == "6":
             _interactive_search()
         elif choice == "7":
+            _interactive_export()
+        elif choice == "8":
+            _interactive_import()
+        elif choice == "9":
             console.print("[bold green]Exiting Todo CLI. Goodbye![/bold green]")
             raise typer.Exit()
         else:

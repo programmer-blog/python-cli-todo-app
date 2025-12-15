@@ -262,15 +262,20 @@ def test_search(temp_db):
 
 def test_export(temp_db, tmp_path):
     """Tests the 'export' command."""
+    # Test exporting with no todos
+    export_file = tmp_path / "export.csv"
+    result = runner.invoke(app, ["export", str(export_file)])
+    assert result.exit_code == 0
+    assert "No tasks to export." == result.stdout
+
     # Add a todo first
     runner.invoke(app, ["add", "Test Export", "--description", "Test Description", "--priority", "high", "--due-date", "2025-01-01"])
     runner.invoke(app, ["toggle", "1"]) # Mark as completed
 
     # Export to a temporary file
-    export_file = tmp_path / "export.csv"
     result = runner.invoke(app, ["export", str(export_file)])
     assert result.exit_code == 0
-    assert f"Todo list exported to {export_file}" in result.stdout
+    assert f"Successfully exported 1 todo(s) to {export_file}" == result.stdout
 
     # Verify the content of the CSV file
     with open(export_file, "r") as f:
@@ -290,7 +295,7 @@ def test_import(temp_db, tmp_path):
     # Import from the temporary file
     result = runner.invoke(app, ["import", str(import_file)])
     assert result.exit_code == 0
-    assert f"Todo list imported from {import_file}" in result.stdout
+    assert f"Successfully imported 2 todo(s) from {import_file}" == result.stdout
 
     # Verify the content of the database
     with temp_db.open("r") as db_file:

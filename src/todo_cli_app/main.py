@@ -114,16 +114,19 @@ def import_csv(
     filename: str = typer.Argument(..., help="The name of the CSV file to import from."),
 ):
     """Imports the todo list from a CSV file."""
-    todoer.import_from_csv(filename)
-    typer.echo(f"Todo list imported from {filename}", nl=False)
+    count = todoer.import_from_csv(filename)
+    typer.echo(f"Successfully imported {count} todo(s) from {filename}", nl=False)
 
 @app.command()
 def export(
     filename: str = typer.Argument(..., help="The name of the CSV file to export to."),
 ):
     """Exports the todo list to a CSV file."""
-    todoer.export_to_csv(filename)
-    typer.echo(f"Todo list exported to {filename}", nl=False)
+    count = todoer.export_to_csv(filename)
+    if count == 0:
+        typer.echo("No tasks to export.", nl=False)
+    else:
+        typer.echo(f"Successfully exported {count} todo(s) to {filename}", nl=False)
 
 if __name__ == "__main__":
     import sys

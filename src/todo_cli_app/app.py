@@ -114,12 +114,12 @@ class Todoer:
             return 1
         return max(todo_dto.id for todo_dto in todo_list) + 1
 
-    def export_to_csv(self, filename: str) -> None:
-        """Exports the todo list to a CSV file."""
+    def export_to_csv(self, filename: str) -> int:
+        """Exports the todo list to a CSV file and returns the number of exported todos."""
         import csv
         todos = self.list_all()
         if not todos:
-            return
+            return 0
 
         with open(filename, "w", newline="") as csvfile:
             fieldnames = ["id", "title", "description", "priority", "due_date", "completed"]
@@ -135,19 +135,22 @@ class Todoer:
                     "due_date": todo.due_date,
                     "completed": todo.completed,
                 })
+        return len(todos)
 
-    def import_from_csv(self, filename: str) -> None:
-        """Imports the todo list from a CSV file."""
+    def import_from_csv(self, filename: str) -> int:
+        """Imports the todo list from a CSV file and returns the number of imported todos."""
         import csv
         
         todo_list = get_todo_list(self._db_path)
-        max_id = self._get_next_id(todo_list) -1
+        max_id = self._get_next_id(todo_list) - 1
+        imported_count = 0
 
         with open(filename, "r") as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 # Ensure the imported todo has a unique id
                 max_id += 1
+                imported_count += 1
                 new_todo = TodoDTO(
                     id=max_id,
                     title=row["title"],
@@ -158,4 +161,7 @@ class Todoer:
                 )
                 todo_list.append(new_todo)
         
-        save_todo_list(todo_list, self._db_path)
+        if imported_count > 0:
+            save_todo_list(todo_list, self._db_path)
+        
+        return imported_count
