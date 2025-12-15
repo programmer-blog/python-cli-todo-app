@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "python-cli-todo-app"
+version = "0.1.0"
+description = "A simple CLI todo application built with Python and Typer, with assistance from Gemini CLI."
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    "typer>=0.9.0",
+    "python-dotenv>=0.21.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "black",
+    "mypy",
+]
+
+[project.scripts]
+todo = "todo_cli_app.main:app"
